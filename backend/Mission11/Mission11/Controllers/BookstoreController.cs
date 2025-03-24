@@ -17,16 +17,20 @@ namespace Mission11.Controllers
         }
 
         [HttpGet(Name = "GetBooks")]
-        public IEnumerable<Book> Get(int pageHowMany= 5, int pageNum=1)
+        public IActionResult Get(int pageHowMany= 5, int pageNum=1)
         {
-            var bookList = _context.Books
+            var BookList = _context.Books
             .Skip((pageNum - 1)* pageHowMany)
             .Take(pageHowMany)
             .ToList();
 
-            var totalNumBooks = (_context.Books.Count());
+            var TotalNumBooks = (_context.Books.Count());
 
-            return bookList;
+            return Ok(new
+            {
+                books = BookList,
+                totalNumBooks = TotalNumBooks
+            });
         }
     }
 }
