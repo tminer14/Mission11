@@ -20,6 +20,7 @@ namespace Mission11.Controllers
         public IActionResult Get(int pageHowMany= 5, int pageNum=1)
         {
             var BookList = _context.Books
+            .OrderBy(b => b.Title)
             .Skip((pageNum - 1)* pageHowMany)
             .Take(pageHowMany)
             .ToList();
