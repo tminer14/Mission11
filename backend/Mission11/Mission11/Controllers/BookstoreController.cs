@@ -32,6 +32,19 @@ namespace Mission11.Controllers
                 books = BookList,
                 totalNumBooks = TotalNumBooks
             });
+
+        }
+
+        [HttpGet("GetBookTypes")]
+        public IActionResult GetBookTypes()
+        {
+            var bookTypes = _context.Books
+                .Select(b => b.Category)
+                .Distinct()
+                .ToList();
+
+            //remember that the Ok makes sure it's JSON!
+            return Ok(bookTypes);
         }
     }
 }

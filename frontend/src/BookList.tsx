@@ -25,7 +25,6 @@ function BookList() {
 
   return (
     <>
-      <h1>Book List</h1>
       {/* create a list of books */}
       <br />
       {books.map((b) => (
