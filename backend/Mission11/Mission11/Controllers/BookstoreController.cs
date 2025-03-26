@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Any;
 using Mission11.Data;
 
 namespace Mission11.Controllers
@@ -17,15 +18,23 @@ namespace Mission11.Controllers
         }
 
         [HttpGet(Name = "GetBooks")]
-        public IActionResult Get(int pageHowMany= 5, int pageNum=1)
+        public IActionResult Get(int pageHowMany= 5, int pageNum=1, [FromQuery] List<string> bookCategory = null)
         {
-            var BookList = _context.Books
+
+            var query = _context.Books.AsQueryable();
+
+            if (bookCategory != null && bookCategory.Any())
+            {
+                query = query.Where(bc => bookCategory.Contains(bc.Category));
+            }
+
+            var BookList = query
             .OrderBy(b => b.Title)
             .Skip((pageNum - 1)* pageHowMany)
             .Take(pageHowMany)
             .ToList();
 
-            var TotalNumBooks = (_context.Books.Count());
+            var TotalNumBooks = query.Count();
 
             return Ok(new
             {
@@ -43,7 +52,7 @@ namespace Mission11.Controllers
                 .Distinct()
                 .ToList();
 
-            //remember that the Ok makes sure it's JSON!
+            //remember that the Ok makes sure it's JSON! 
             return Ok(bookTypes);
         }
     }

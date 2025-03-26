@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { book } from "./types/book";
+import { book } from "../types/book";
 
 // create varables to use later
-function BookList() {
+function BookList({ selectedCategories }: { selectedCategories: string[] }) {
   const [books, setBooks] = useState<book[]>([]);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
@@ -11,8 +11,12 @@ function BookList() {
 
   useEffect(() => {
     const fetchBook = async () => {
+      const categoryParams = selectedCategories
+        .map((cat) => `bookCategory=${encodeURIComponent(cat)}`)
+        .join(`&`);
+
       const response = await fetch(
-        `https://localhost:7000/Bookstore?pageHowMany=${pageSize}&pageNum=${pageNum}`
+        `https://localhost:7000/Bookstore?pageHowMany=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ""}`
       );
       const data = await response.json();
       //get data from the json
@@ -21,7 +25,7 @@ function BookList() {
       setTotalPages(Math.ceil(totalItems / pageSize));
     };
     fetchBook();
-  }, [pageSize, pageNum, totalItems]);
+  }, [pageSize, pageNum, totalItems, selectedCategories]);
 
   return (
     <>
