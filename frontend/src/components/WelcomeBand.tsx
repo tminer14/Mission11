@@ -1,5 +1,11 @@
 function WelcomeBand() {
-  return <h1>Bookstore</h1>;
+  return (
+    <>
+      <div className="row bg-primary text-white">
+        <h1>Bookstore</h1>
+      </div>
+    </>
+  );
 }
 
 export default WelcomeBand;

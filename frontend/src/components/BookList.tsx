@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { book } from "../types/book";
+import { useNavigate } from "react-router-dom";
 
 // create varables to use later
 function BookList({ selectedCategories }: { selectedCategories: string[] }) {
@@ -8,6 +9,7 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
   const [pageNum, setPageNum] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -27,12 +29,21 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
     fetchBook();
   }, [pageSize, pageNum, totalItems, selectedCategories]);
 
+  const handleBuyBook = (book: book) => {
+    // Navigate to the BuyBookPage and pass the book data through state
+    navigate(`/buybook/${book.title}/${book.bookID}`, {
+      state: { book }, // Pass the entire book object, including price
+    });
+  };
+
+
   return (
     <>
       {/* create a list of books */}
       <br />
+      <div className="row row-cols-1 row-cols-md-3 g-4">
       {books.map((b) => (
-        <div id="bookCard" className="card" key={b.bookID}>
+        <div id="bookCard" className="card mb-4" key={b.bookID} style={{maxWidth:}}>
           <h3 className="card-title">
             <strong>{b.title}</strong>
           </h3>
@@ -65,6 +76,12 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
               <strong>Price: </strong>
               {b.price}
             </ul>
+            <button
+              className="btn btn-success"
+              onClick={() => handleBuyBook(b)}
+            >
+              Buy Book
+            </button>
           </div>
         </div>
       ))}
