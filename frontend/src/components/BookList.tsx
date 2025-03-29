@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { book } from "../types/book";
 import { useNavigate } from "react-router-dom";
 
+
 // create varables to use later
 function BookList({ selectedCategories }: { selectedCategories: string[] }) {
   const [books, setBooks] = useState<book[]>([]);
@@ -36,55 +37,62 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
     });
   };
 
-
   return (
     <>
-      {/* create a list of books */}
-      <br />
-      <div className="row row-cols-1 row-cols-md-3 g-4">
-      {books.map((b) => (
-        <div id="bookCard" className="card mb-4" key={b.bookID} style={{maxWidth:}}>
-          <h3 className="card-title">
-            <strong>{b.title}</strong>
-          </h3>
-          <div className="card-body">
-            <ul className="list-unstyled">
-              <strong>Author: </strong>
-              {b.author}
-            </ul>
-            <ul className="list-unstyled">
-              <strong>Publisher: </strong>
-              {b.publisher}
-            </ul>
-            <ul className="list-unstyled">
-              <strong>ISBN: </strong>
-              {b.isbn}
-            </ul>
-            <ul className="list-unstyled">
-              <strong>Classification: </strong>
-              {b.classification}
-            </ul>
-            <ul className="list-unstyled">
-              <strong>Category: </strong>
-              {b.category}
-            </ul>
-            <ul className="list-unstyled">
-              <strong>Page Count: </strong>
-              {b.pageCount}
-            </ul>
-            <ul className="list-unstyled">
-              <strong>Price: </strong>
-              {b.price}
-            </ul>
-            <button
-              className="btn btn-success"
-              onClick={() => handleBuyBook(b)}
+
+        <div className="row row-cols-1 row-cols-md-3 g-4 p-3">
+          {/* create a list of books */}
+          <br />
+          {books.map((b) => (
+            <div
+              id="bookCard"
+              className="card mb-4"
+              key={b.bookID}
+              style={{ maxWidth: "300px", minWidth: "250px" }}
             >
-              Buy Book
-            </button>
-          </div>
+              <h3 className="card-title">
+                <strong>{b.title}</strong>
+              </h3>
+              <div className="card-body">
+                <ul className="list-unstyled">
+                  <strong>Author: </strong>
+                  {b.author}
+                </ul>
+                <ul className="list-unstyled">
+                  <strong>Publisher: </strong>
+                  {b.publisher}
+                </ul>
+                <ul className="list-unstyled">
+                  <strong>ISBN: </strong>
+                  {b.isbn}
+                </ul>
+                <ul className="list-unstyled">
+                  <strong>Classification: </strong>
+                  {b.classification}
+                </ul>
+                <ul className="list-unstyled">
+                  <strong>Category: </strong>
+                  {b.category}
+                </ul>
+                <ul className="list-unstyled">
+                  <strong>Page Count: </strong>
+                  {b.pageCount}
+                </ul>
+                <ul className="list-unstyled">
+                  <strong>Price: </strong>
+                  {b.price}
+                </ul>
+                <button
+                  className="btn btn-success"
+                  onClick={() => handleBuyBook(b)}
+                >
+                  Buy Book
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+ 
       <button disabled={pageNum === 1} onClick={() => setPageNum(pageNum - 1)}>
         Previous
       </button>
@@ -120,6 +128,7 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
           <option value="20">20</option>
         </select>
       </label>
+      <br/><br/>
     </>
   );
 }

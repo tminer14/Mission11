@@ -28,8 +28,6 @@ function BuyBookPage() {
 
   return (
     <>
-      <WelcomeBand />
-
       <h2>Buy {book?.title}</h2>
 
       <div>

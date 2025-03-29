@@ -3,6 +3,7 @@ import BookList from "../components/BookList";
 import CategoryFilter from "../components/CategoryFilter";
 import WelcomeBand from "../components/WelcomeBand";
 import CartSummary from "../components/CartSummary";
+import Footer from "../components/Footer";
 
 function BookstorePage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -22,6 +23,7 @@ function BookstorePage() {
         <div className="col-md-9">
           <BookList selectedCategories={selectedCategories} />
         </div>
+        <Footer/>
       </div>
     </div>
   );
