@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "undefined/subscriptions/f2c58bfb-d717-463e-bbe7-6d34ed7b271c/resourceGroups/appsvc_windows_westcentralus/providers/Microsoft.Web/sites/TessaMMission13",
+  "appService.deploySubpath": "backend\\Mission11\\Mission11\\publish"
+}
