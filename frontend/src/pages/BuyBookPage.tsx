@@ -1,8 +1,7 @@
-import WelcomeBand from "../components/WelcomeBand";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useState } from "react";
-import { CartItem } from "../types/cartItem";
+import { CartItem } from "../types/CartItem";
 
 function BuyBookPage() {
   const navigate = useNavigate();
@@ -14,6 +13,7 @@ function BuyBookPage() {
 
   const book = location.state?.book;
 
+  //pass in as an item
   const HandleAddToCart = () => {
     const newItem: CartItem = {
       bookID: book?.bookID,
@@ -36,6 +36,7 @@ function BuyBookPage() {
         <button onClick={HandleAddToCart}>View Cart</button>
       </div>
 
+      {/* gives option to go back */}
       <button onClick={() => navigate(-1)}>Go Back</button>
     </>
   );

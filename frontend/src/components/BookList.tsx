@@ -1,34 +1,38 @@
 import { useEffect, useState } from "react";
 import { book } from "../types/book";
 import { useNavigate } from "react-router-dom";
-
+import { fetchBooks } from "../api/BooksAPI";
+import Pagination from "./Pagination";
 
 // create varables to use later
 function BookList({ selectedCategories }: { selectedCategories: string[] }) {
   const [books, setBooks] = useState<book[]>([]);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
-  const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBook = async () => {
-      const categoryParams = selectedCategories
-        .map((cat) => `bookCategory=${encodeURIComponent(cat)}`)
-        .join(`&`);
+    const loadBooks = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchBooks(pageSize, pageNum, selectedCategories);
 
-      const response = await fetch(
-        `https://localhost:7000/Bookstore?pageHowMany=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ""}`
-      );
-      const data = await response.json();
-      //get data from the json
-      setBooks(data.books);
-      setTotalItems(data.totalNumBooks);
-      setTotalPages(Math.ceil(totalItems / pageSize));
+        setBooks(data.books);
+        setTotalPages(Math.ceil(data.totalNumBooks / pageSize));
+      } catch (error) {
+        setError((error as Error).message);
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchBook();
-  }, [pageSize, pageNum, totalItems, selectedCategories]);
+    loadBooks();
+  }, [pageSize, pageNum, selectedCategories]);
+
+  if (loading) return <p>Loading books...</p>
+  if (error) return <p>Error: {error}</p>
 
   const handleBuyBook = (book: book) => {
     // Navigate to the BuyBookPage and pass the book data through state
@@ -39,96 +43,69 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
 
   return (
     <>
-
-        <div className="row row-cols-1 row-cols-md-3 g-4 p-3">
-          {/* create a list of books */}
-          <br />
-          {books.map((b) => (
-            <div
-              id="bookCard"
-              className="card mb-4"
-              key={b.bookID}
-              style={{ maxWidth: "300px", minWidth: "250px" }}
-            >
-              <h3 className="card-title">
-                <strong>{b.title}</strong>
-              </h3>
-              <div className="card-body">
-                <ul className="list-unstyled">
-                  <strong>Author: </strong>
-                  {b.author}
-                </ul>
-                <ul className="list-unstyled">
-                  <strong>Publisher: </strong>
-                  {b.publisher}
-                </ul>
-                <ul className="list-unstyled">
-                  <strong>ISBN: </strong>
-                  {b.isbn}
-                </ul>
-                <ul className="list-unstyled">
-                  <strong>Classification: </strong>
-                  {b.classification}
-                </ul>
-                <ul className="list-unstyled">
-                  <strong>Category: </strong>
-                  {b.category}
-                </ul>
-                <ul className="list-unstyled">
-                  <strong>Page Count: </strong>
-                  {b.pageCount}
-                </ul>
-                <ul className="list-unstyled">
-                  <strong>Price: </strong>
-                  {b.price}
-                </ul>
-                <button
-                  className="btn btn-success"
-                  onClick={() => handleBuyBook(b)}
-                >
-                  Buy Book
-                </button>
-              </div>
+      <div className="row row-cols-1 row-cols-md-3 g-4 p-3">
+        {/* create a list of books */}
+        <br />
+        {books.map((b) => (
+          <div
+            id="bookCard"
+            className="card mb-4"
+            key={b.bookID}
+            style={{ maxWidth: "300px", minWidth: "250px" }}
+          >
+            <h3 className="card-title">
+              <strong>{b.title}</strong>
+            </h3>
+            <div className="card-body">
+              <ul className="list-unstyled">
+                <strong>Author: </strong>
+                {b.author}
+              </ul>
+              <ul className="list-unstyled">
+                <strong>Publisher: </strong>
+                {b.publisher}
+              </ul>
+              <ul className="list-unstyled">
+                <strong>ISBN: </strong>
+                {b.isbn}
+              </ul>
+              <ul className="list-unstyled">
+                <strong>Classification: </strong>
+                {b.classification}
+              </ul>
+              <ul className="list-unstyled">
+                <strong>Category: </strong>
+                {b.category}
+              </ul>
+              <ul className="list-unstyled">
+                <strong>Page Count: </strong>
+                {b.pageCount}
+              </ul>
+              <ul className="list-unstyled">
+                <strong>Price: </strong>
+                {b.price}
+              </ul>
+              <button
+                className="btn btn-success"
+                onClick={() => handleBuyBook(b)}
+              >
+                Buy Book
+              </button>
             </div>
-          ))}
-        </div>
- 
-      <button disabled={pageNum === 1} onClick={() => setPageNum(pageNum - 1)}>
-        Previous
-      </button>
-      {/* builds array out of size of total pages */}
-      {[...Array(totalPages)].map((_, index) => (
-        <button
-          key={index + 1}
-          onClick={() => setPageNum(index + 1)}
-          disabled={pageNum === index + 1}
-        >
-          {index + 1}
-        </button>
-      ))}
-      <button
-        disabled={pageNum === totalPages}
-        onClick={() => setPageNum(pageNum + 1)}
-      >
-        Next
-      </button>
-      <br />
-      <label>
-        Results per page:
-        <select
-          value={pageSize}
-          onChange={(p) => {
-            setPageSize(Number(p.target.value));
-            setPageNum(1);
-          }}
-        >
-          <br />
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-        </select>
-      </label>
-      <br/><br/>
+          </div>
+        ))}
+      </div>
+
+    <Pagination
+      currentPage={pageNum}
+      totalPages={totalPages}
+      pageSize={pageSize}
+      onPageChange={setPageNum}
+      onPageSizeChange={(newSize) => {
+        setPageSize(newSize);
+        setPageNum(1);
+      }}/>   
+
     </>
   );
 }
