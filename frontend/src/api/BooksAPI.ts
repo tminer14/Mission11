@@ -13,7 +13,6 @@ export const fetchBooks = async (
   pageSize: number,
   pageNum: number,
   selectedCategories: string[]
-
   //this is what is eventually going to resolve to
 ): Promise<fetchBooksResponse> => {
   //error handling
