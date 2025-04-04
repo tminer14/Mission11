@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 import "./categoryFilter.css";
 
-function CategoryFilter({selectedCategories, setSelectedCategories}:{selectedCategories: string[], setSelectedCategories: (categories: string[])=> void}) {
+function CategoryFilter({
+  selectedCategories,
+  setSelectedCategories,
+}: {
+  selectedCategories: string[];
+  setSelectedCategories: (categories: string[]) => void;
+}) {
   const [categories, setCategories] = useState<string[]>([]);
-  
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          "https://localhost:7000/Bookstore/GetBookTypes"
+          "https://bookstoreapi-ccadgsdcbxbqehe9.westcentralus-01.azurewebsites.net//Bookstore/GetBookTypes"
         );
         const data = await response.json();
         console.log("Fetched categories", data);
